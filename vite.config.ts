@@ -7,7 +7,7 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
-    base: './',
+    base: '/charismadavid/',
     optimizeDeps: {
       exclude: ['lucide-react'],
     },
