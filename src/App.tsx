@@ -1,20 +1,25 @@
 import { useState } from 'react';
-import { Menu, X, Users, Sparkles, Heart, Clock, Smile, Home } from 'lucide-react';
+import { Menu, X, Users, Sparkles, Heart, Clock, Smile, Home, Target } from 'lucide-react';
+import { useAuth } from './contexts/AuthContext';
+import Auth from './components/Auth';
 import HomePage from './components/HomePage';
 import WomenSection from './components/WomenSection';
 import MenSection from './components/MenSection';
 import CourageSection from './components/CourageSection';
 import PresenceSection from './components/PresenceSection';
 import WellbeingSection from './components/WellbeingSection';
+import ChallengeSection from './components/ChallengeSection';
 
-type Section = 'home' | 'women' | 'men' | 'courage' | 'presence' | 'wellbeing';
+type Section = 'home' | 'women' | 'men' | 'courage' | 'presence' | 'wellbeing' | 'challenge';
 
 function App() {
+  const { user, loading } = useAuth();
   const [activeSection, setActiveSection] = useState<Section>('home');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = [
     { id: 'home' as Section, name: 'Domov', icon: Home, color: 'bg-gradient-to-br from-blue-500 to-cyan-500' },
+    { id: 'challenge' as Section, name: '28-Dňová výzva', icon: Target, color: 'bg-gradient-to-br from-violet-500 to-fuchsia-600', requiresAuth: true },
     { id: 'women' as Section, name: 'Ženy', icon: Sparkles, color: 'bg-gradient-to-br from-rose-400 to-pink-500' },
     { id: 'men' as Section, name: 'Muži', icon: Users, color: 'bg-gradient-to-br from-blue-600 to-sky-600' },
     { id: 'courage' as Section, name: 'Odvaha', icon: Heart, color: 'bg-gradient-to-br from-orange-500 to-red-600' },
@@ -26,6 +31,8 @@ function App() {
     switch (activeSection) {
       case 'home':
         return <HomePage />;
+      case 'challenge':
+        return user ? <ChallengeSection /> : <Auth />;
       case 'women':
         return <WomenSection />;
       case 'men':
@@ -40,6 +47,14 @@ function App() {
         return <HomePage />;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+        <div className="text-slate-600">Načítavam...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
